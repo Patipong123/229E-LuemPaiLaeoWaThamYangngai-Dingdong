@@ -59,6 +59,13 @@ public class PlayerController : MonoBehaviour
             hasJumped = false;
         }
 
+        if (other.gameObject.CompareTag("BlackHole"))
+        {
+            ReloadScene();
+        }
+
+
+
     }
 
     void ReloadScene()

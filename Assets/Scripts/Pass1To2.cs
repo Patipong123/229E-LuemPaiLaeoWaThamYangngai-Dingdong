@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
-public class Pass : MonoBehaviour
+public class Pass1To2 : MonoBehaviour
 {
     public string nextSceneName = "Map2";
     public float waitTime = 3f;
