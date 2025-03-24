@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Box : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     public float maxChargeTime = 3f;
     public float maxForce = 20f;
