@@ -2,9 +2,9 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    public Transform target;         // ตัวที่กล้องจะตาม (เช่น Player หรือ Box)
-    public Vector3 offset = new Vector3(0, 5, -10); // ระยะห่างจาก target
-    public float smoothSpeed = 5f;   // ความเร็วในการตาม (ยิ่งมากยิ่งเร็ว)
+    public Transform target;         
+    public Vector3 offset = new Vector3(0, 5, -10); 
+    public float smoothSpeed = 5f;   
 
     void LateUpdate()
     {
