@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    public Slider chargeSlider;
+    public Slider chargeSlide;
 
     public float maxChargeTime = 3f;
     public float maxForce = 30f;
@@ -26,42 +26,44 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
 
-        if (chargeSlider != null)
-            chargeSlider.maxValue = maxChargeTime;
+        if (chargeSlide != null)
+            chargeSlide.maxValue = maxForce;
 
     }
 
     void Update()
     {
 
-        if (transform.position.y < minY || transform.position.y > maxY)
+        if (transform.position.y < minY || transform.position.y > maxY) // out of map = dead
         {
             
-            ReloadScene();
+            ReloadScene(); // load scene
         }
 
-        if (isCharging && chargeSlider != null)
+        if (isCharging && chargeSlide != null) //logic chargeSlide
         {
-            chargeSlider.value = chargeTimer;
+            float chargePercent = chargeTimer / maxChargeTime;
+            float currentForce = chargePercent * maxForce;
+            chargeSlide.value = currentForce;
         }
 
-        if (Input.GetKeyDown(KeyCode.Space) && !hasJumped)
+        if (Input.GetKeyDown(KeyCode.Space) && !hasJumped) // 1. hold spacebar to start charging and set time
         {
             isCharging = true;
             chargeTimer = 0f;
         }
 
-        if (Input.GetKey(KeyCode.Space) && isCharging)
+        if (Input.GetKey(KeyCode.Space) && isCharging) // 2. if hold spacebar count time charge
         {
             chargeTimer += Time.deltaTime;
             chargeTimer = Mathf.Min(chargeTimer, maxChargeTime);
         }
 
-        if (Input.GetKeyUp(KeyCode.Space) && isCharging)
+        if (Input.GetKeyUp(KeyCode.Space) && isCharging) // 3. if leave spacebar run fuction Force and set slide = 0
         {
-            Gravity();
-            if (chargeSlider != null)
-                chargeSlider.value = 0;
+            Force();
+            if (chargeSlide != null)
+                chargeSlide.value = 0;
         }
     }
 
@@ -88,18 +90,18 @@ public class PlayerController : MonoBehaviour
         SceneManager.LoadScene(current.name);
     }
 
-    void Gravity() 
+    void Force() 
     {
-        float chargePercent = chargeTimer / maxChargeTime;
-        float appliedForce = chargePercent * maxForce;
+        float chargePercent = chargeTimer / maxChargeTime; 
+        float force = chargePercent * maxForce; 
 
-        rb.AddForce(jumpDirection.normalized * appliedForce, ForceMode.Impulse);
+        rb.AddForce(jumpDirection.normalized * force, ForceMode.Impulse); 
 
         isCharging = false;
         hasJumped = true;
         
 
-        Debug.Log(appliedForce);
+        Debug.Log(force);
         
     }
 
