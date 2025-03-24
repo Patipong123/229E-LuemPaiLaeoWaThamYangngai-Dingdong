@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -14,6 +15,8 @@ public class PlayerController : MonoBehaviour
     private bool hasJumped = false;
     private int jumpCount = 0;
 
+    public float minY = -10f;   
+    public float maxY = 50f;
 
 
     void Start()
@@ -24,61 +27,64 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        while (jumpCount < maxJumps) 
+        if (transform.position.y < minY || transform.position.y > maxY)
         {
+            
+            ReloadScene();
+        }
 
-            if (Input.GetKeyDown(KeyCode.Space) && !hasJumped)
-            {
-                isCharging = true;
-                chargeTimer = 0f;
-            }
+        if (Input.GetKeyDown(KeyCode.Space) && !hasJumped)
+        {
+            isCharging = true;
+            chargeTimer = 0f;
+        }
 
-            if (Input.GetKey(KeyCode.Space) && isCharging)
-            {
-                chargeTimer += Time.deltaTime;
-                chargeTimer = Mathf.Min(chargeTimer, maxChargeTime);
-            }
+        if (Input.GetKey(KeyCode.Space) && isCharging)
+        {
+            chargeTimer += Time.deltaTime;
+            chargeTimer = Mathf.Min(chargeTimer, maxChargeTime);
+        }
 
-            if (Input.GetKeyUp(KeyCode.Space) && isCharging)
-            {
-                float chargePercent = chargeTimer / maxChargeTime;
-                float appliedForce = chargePercent * maxForce;
-
-                rb.AddForce(jumpDirection.normalized * appliedForce, ForceMode.Impulse);
-
-                isCharging = false;
-                hasJumped = true;
-                jumpCount++;
-
-                Debug.Log(appliedForce);
-                Debug.Log(jumpCount);
-            }
-            if (jumpCount >= maxJumps) 
-            {
-                break;
-            }
+        if (Input.GetKeyUp(KeyCode.Space) && isCharging)
+        {
+            Gravity();
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter(Collision other)
     {
 
-        if (collision.gameObject.CompareTag("CheckPoint"))
-        {
-            jumpCount = 0;
-        }
-
-        if (collision.gameObject.CompareTag("Ground")) 
+        if (other.gameObject.CompareTag("Ground")) 
         {
             hasJumped = false;
         }
 
-        
-
-
     }
 
-    
+    void ReloadScene()
+    {
+        Scene current = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(current.name);
+    }
+
+    void Gravity() 
+    {
+        float chargePercent = chargeTimer / maxChargeTime;
+        float appliedForce = chargePercent * maxForce;
+
+        rb.AddForce(jumpDirection.normalized * appliedForce, ForceMode.Impulse);
+
+        isCharging = false;
+        hasJumped = true;
+        jumpCount++;
+
+        Debug.Log(appliedForce);
+        Debug.Log(jumpCount);
+    }
+
+
+
+
 
 
 }
