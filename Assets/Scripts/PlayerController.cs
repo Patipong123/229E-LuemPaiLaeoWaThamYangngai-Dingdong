@@ -24,40 +24,61 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
-        if (jumpCount >= maxJumps) return;
-
-        if (Input.GetKeyDown(KeyCode.Space) && !hasJumped)
+        while (jumpCount < maxJumps) 
         {
-            isCharging = true;
-            chargeTimer = 0f;
-        }
 
-        if (Input.GetKey(KeyCode.Space) && isCharging)
-        {
-            chargeTimer += Time.deltaTime;
-            chargeTimer = Mathf.Min(chargeTimer, maxChargeTime);
-        }
+            if (Input.GetKeyDown(KeyCode.Space) && !hasJumped)
+            {
+                isCharging = true;
+                chargeTimer = 0f;
+            }
 
-        if (Input.GetKeyUp(KeyCode.Space) && isCharging)
-        {
-            float chargePercent = chargeTimer / maxChargeTime;
-            float appliedForce = chargePercent * maxForce;
+            if (Input.GetKey(KeyCode.Space) && isCharging)
+            {
+                chargeTimer += Time.deltaTime;
+                chargeTimer = Mathf.Min(chargeTimer, maxChargeTime);
+            }
 
-            rb.AddForce(jumpDirection.normalized * appliedForce, ForceMode.Impulse);
+            if (Input.GetKeyUp(KeyCode.Space) && isCharging)
+            {
+                float chargePercent = chargeTimer / maxChargeTime;
+                float appliedForce = chargePercent * maxForce;
 
-            isCharging = false;
-            hasJumped = true;
-            jumpCount++;
+                rb.AddForce(jumpDirection.normalized * appliedForce, ForceMode.Impulse);
 
-            Debug.Log(appliedForce);
+                isCharging = false;
+                hasJumped = true;
+                jumpCount++;
+
+                Debug.Log(appliedForce);
+                Debug.Log(jumpCount);
+            }
+            if (jumpCount >= maxJumps) 
+            {
+                break;
+            }
         }
     }
 
     private void OnCollisionEnter(Collision collision)
     {
+
+        if (collision.gameObject.CompareTag("CheckPoint"))
+        {
+            jumpCount = 0;
+        }
+
         if (collision.gameObject.CompareTag("Ground")) 
         {
             hasJumped = false;
         }
+
+        
+
+
     }
+
+    
+
+
 }
