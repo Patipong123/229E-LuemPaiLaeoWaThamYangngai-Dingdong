@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour
         {
             isCharging = true;
             chargeTimer = 0f;
-            hasJumped = true;
+            
         }
 
         if (Input.GetKey(KeyCode.Space) && isCharging) // 2. if hold spacebar count time charge
