@@ -10,7 +10,7 @@ public class PlayerController : MonoBehaviour
     public float maxChargeTime = 3f;
     public float maxForce = 30f;
     public Vector3 jumpDirection = new Vector3(0, 1, 1);
-    public int maxJumps = 3;
+    
 
     private float chargeTimer = 0f;
     private bool isCharging = false;
